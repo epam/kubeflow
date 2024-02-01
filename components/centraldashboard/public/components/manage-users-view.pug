@@ -29,7 +29,7 @@ section#Main-Content
             iron-icon.icon(icon='kubeflow:namespace')
             span.text Contributors to your namespace - [[ownedNamespace.namespace]]
         .content.small
-            md2-input(label='Email Addresses', value='{{newContribEmail}}', on-submit='addNewContrib', placeholder='Add by email address', error$='[[contribCreateError]]')
+            md2-input#ContribUsername(label='Username', value='{{newContribUsername}}', on-submit='addNewContrib', placeholder='Add by username', error$='[[contribCreateError]]')
                 .prefix(slot='prefix')
                     template(is='dom-repeat', items='[[contributorList]]')
                         paper-chip(on-remove='removeContributor') [[item]]
@@ -43,7 +43,7 @@ section#Main-Content
                 vaadin-grid-column(width='10em', path='1', header='Owner')
                 vaadin-grid-column(width='15em', path='2', flex-grow='2', header='Contributors')
 paper-toast#ContribError(duration=5000)
-    | Failed to fetch contributor list for {{ownedNamespace.namespace}}, because: 
+    | Failed to fetch contributor list for {{ownedNamespace.namespace}}, because:
     strong [[contribError]]
 paper-toast#AllNamespaceError(duration=5000)
     | Failed to fetch all namespaces, because:

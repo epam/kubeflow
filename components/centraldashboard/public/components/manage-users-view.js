@@ -35,7 +35,7 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
             isClusterAdmin: {type: Boolean, value: false},
             namespaces: Array,
             ownedNamespace: {type: Object, value: () => ({})},
-            newContribEmail: String,
+            newContribUsername: String,
             contribError: Object,
             contributorInputEl: Object,
         };
@@ -45,7 +45,7 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
      */
     ready() {
         super.ready();
-        this.contributorInputEl = this.$.ContribEmail;
+        this.contributorInputEl = this.$.ContribUsername;
     }
     /**
      * Returns 1 to 2 rows containing owner and contributor rows for namespaces
@@ -72,7 +72,7 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
      */
     addNewContrib() {
         const api = this.$.AddContribAjax;
-        api.body = {contributor: this.newContribEmail};
+        api.body = {contributor: this.newContribUsername};
         api.generateRequest();
     }
     /**
@@ -105,7 +105,7 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
             return;
         }
         this.contributorList = e.detail.response;
-        this.newContribEmail = this.contribCreateError = '';
+        this.newContribUsername = this.contribCreateError = '';
     }
     /**
      * Iron-Ajax response / error handler for removeContributor
@@ -118,7 +118,7 @@ export class ManageUsersView extends utilitiesMixin(PolymerElement) {
             return;
         }
         this.contributorList = e.detail.response;
-        this.newContribEmail = this.contribCreateError = '';
+        this.newContribUsername = this.contribCreateError = '';
     }
     /**
      * Iron-Ajax error handler for getContributors
