@@ -225,7 +225,7 @@ describe('Workgroup API', () => {
                         bindings: []
                     },
                 }));
-            const expectedResponse = {hasAuth: false, hasWorkgroup: false, 
+            const expectedResponse = {hasAuth: false, hasWorkgroup: false,
                 user: 'anonymous', registrationFlowAllowed: true};
 
             const response = await sendTestRequest(url);
@@ -251,7 +251,7 @@ describe('Workgroup API', () => {
                         },
                     }));
 
-                const expectedResponse = {hasAuth: true, hasWorkgroup: true, 
+                const expectedResponse = {hasAuth: true, hasWorkgroup: true,
                     user: 'test', registrationFlowAllowed: true};
 
                 const headers = {
@@ -275,7 +275,7 @@ describe('Workgroup API', () => {
                     body: {bindings: []},
                 }));
 
-            const expectedResponse = {hasAuth: true, hasWorkgroup: false, 
+            const expectedResponse = {hasAuth: true, hasWorkgroup: false,
                 user: 'test', registrationFlowAllowed: true};
 
             const headers = {
@@ -391,7 +391,7 @@ describe('Workgroup API', () => {
     describe('Add / Remove Contributor', () => {
         type RouteTypes = 'add' | 'remove';
         let url: (type: RouteTypes) => string;
-        const requestBody = {contributor: 'apverma@google.com'};
+        const requestBody = {contributor: 'apverma'};
         const headers = {
             'content-type': 'application/json',
             [header.goog]: `${prefix.goog}test@testdomain.com`,
@@ -430,11 +430,11 @@ describe('Workgroup API', () => {
             });
             expect(mockProfilesService.createBinding).not.toHaveBeenCalled();
         });
-        it('Should error on invalid email for contrib', async () => {
+        it('Should error on invalid name for contrib', async () => {
             const response = await sendTestRequest(url('add'), headers, 400, 'post', {
-                contributor: 'apverma'
+                contributor: 'apverma@kubeflow.org'
             });
-            expect(response).toEqual({error: `Contributor doesn't look like a valid email address`});
+            expect(response).toEqual({error: `Contributor doesn't look like a valid name`});
             expect(mockProfilesService.createBinding).not.toHaveBeenCalled();
         });
         it('Should successfully add a contributor', async () => {
@@ -443,7 +443,7 @@ describe('Workgroup API', () => {
             expect(mockProfilesService.createBinding).toHaveBeenCalledWith({
                 user: {
                     kind: 'User',
-                    name: 'apverma@google.com',
+                    name: 'apverma',
                 },
                 referredNamespace: 'apverma',
                 roleRef: {
@@ -460,7 +460,7 @@ describe('Workgroup API', () => {
             expect(mockProfilesService.deleteBinding).toHaveBeenCalledWith({
                 user: {
                     kind: 'User',
-                    name: 'apverma@google.com',
+                    name: 'apverma',
                 },
                 referredNamespace: 'apverma',
                 roleRef: {

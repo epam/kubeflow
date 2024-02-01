@@ -19,8 +19,9 @@ RUN BUILDARCH="$(dpkg --print-architecture)" &&  npm rebuild && \
     export CFLAGS=-Wno-error && \
     export CXXFLAGS=-Wno-error;  \
     fi && \
-    npm install && \
-    npm run build && \
+    npm install
+
+RUN npm run build && \
     npm prune --production
 
 # Step 2: Packages assets for serving

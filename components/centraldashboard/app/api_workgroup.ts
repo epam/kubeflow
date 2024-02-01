@@ -8,8 +8,9 @@ import {
     ERRORS,
 } from './api';
 
-// From: https://www.w3resource.com/javascript/form/email-validation.php
-const EMAIL_RGX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+// GPT4 generated regex to validate name by RFC 1123 standard
+const CONTRIBUTOR_NAME_RGX = /^(?=.{1,253}$)(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/;
+const RESERVED_CONTRIBUTOR_NAMES = ['argo', 'dex', 'ingress-nginx', 'istio-system', 'kube-system', 'kubeflow', 'kubeflow-data', "seldon-system"];
 
 // Valid actions for handling a contributor
 type ContributorActions = 'create' | 'remove';
@@ -202,10 +203,16 @@ export class WorkgroupApi {
                 error: `Missing ${missing.join(' and ')} field${missing.length-1?'s':''}.`,
             });
         }
-        if (!EMAIL_RGX.test(contributor)) {
+        if (!CONTRIBUTOR_NAME_RGX.test(contributor)) {
             return apiError({
                 res,
-                error: `Contributor doesn't look like a valid email address`,
+                error: `Contributor doesn't look like a valid name`,
+            });
+        }
+        if (RESERVED_CONTRIBUTOR_NAMES.includes(contributor)) {
+            return apiError({
+                res,
+                error: `Contributor name can't be one of system namespaces: ${RESERVED_CONTRIBUTOR_NAMES.join(', ')}`,
             });
         }
         let errIndex = 0;
@@ -228,8 +235,8 @@ export class WorkgroupApi {
             res.json(users);
         } catch (err) {
             const errMessage = [
-                `Unable to add new contributor for ${namespace}: ${err.stack || err}`,
-                `Unable to fetch contributors for ${namespace}: ${err.stack || err}`,
+                `Unable to add new contributor for ${namespace}: ${err.response.statusCode || err.stack || err}`,
+                `Unable to fetch contributors for ${namespace}: ${err.response.statusCode || err.stack || err}`,
             ][errIndex];
             surfaceProfileControllerErrors({
                 res,
